@@ -21,6 +21,6 @@ Davide Verzotto, University of Pisa
 
 *** Citation ***
 
-Markus J. Bauer, Anthony J. Cox and Giovanna Rosone
+F. Garofalo, G. Rosone, M. Sciortino and D. Verzotto
 The colored longest common prefix array computed via sequential scans. 
 Proceedings of SPIRE 2018
