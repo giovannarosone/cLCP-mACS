@@ -7,10 +7,12 @@ Efficient lightweight strategy to solve the multi-string Average Common Substrin
 ** SPIRE 2018
 ** by F. Garofalo, G. Rosone, M. Sciortino and D. Verzotto
 ** 
+**
 ** 
 ** Supported by the project Italian MIUR-SIR CMACBioSeq 
 ** ("Combinatorial methods for analysis and compression of biological sequences") 
 ** grant n.~RBSI146R5L.
+ 
  
 *** Contributors ***
 
