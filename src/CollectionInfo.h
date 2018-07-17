@@ -58,7 +58,9 @@ public:
 			const int input_format,
 			const bool collect_info,
 			const bool verbose);
-	CollectionInfo(const std::string &collection_file_name);
+	CollectionInfo(const std::string &collection_file_name,
+			const int input_format,
+			const bool verbose);
 	CollectionInfo& operator=(const CollectionInfo& collection);
 	~CollectionInfo();
 

@@ -50,8 +50,14 @@ CollectionInfo::CollectionInfo() {
 
 }
 
-CollectionInfo::CollectionInfo(const std::string& collection_file_name) :
-	collection_file_name(collection_file_name) {
+CollectionInfo::CollectionInfo(const std::string& collection_file_name,
+		const int file_format,
+		const bool verbose) :
+	collection_file_name(collection_file_name),
+	file_format(file_format),
+	collect_info(false),
+	verbose(verbose) {
+	checkForFiles();
 	loadCollectionInfo(collection_file_name);
 }
 

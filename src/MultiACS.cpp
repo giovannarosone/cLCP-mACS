@@ -450,7 +450,7 @@ void MultiACS::backwardComputation(LetterNumber score_x[]) {
 } /* namespace multi_acs */
 
 void printUsage() {
-	cout << "Usage: [-h] [-v] [-f input_format] [-Q amount] ref_seq target_seqs ref_color output" << endl;
+	cout << "Usage: [-h] [-v] [-p] [-f input_format] [-Q amount] ref_seq target_seqs ref_color output" << endl;
 }
 
 using namespace multi_acs;
@@ -458,16 +458,20 @@ using namespace multi_acs;
 int main(int argc, char* argv[]) {
 
 	bool verbose = false;
-	int input_format = 0;
+	bool preprocessed = false;
+	int input_format = 1;
 	string reference_seq_file_name, target_collection_file_name, output_file_name;
 	SequenceNumber reference_color;
 	AllocableMemory memory_amount = BUFFER_SIZE*sizeof(SequenceLength);
 
 	int o;
-	while((o = getopt(argc, argv, "vhf:Q:")) != -1) {
+	while((o = getopt(argc, argv, "vhpf:Q:")) != -1) {
 		switch(o) {
 			case 'v':
 				verbose = true;
+				break;
+			case 'p':
+				preprocessed = true;
 				break;
 			case 'f':
 				input_format = atoi(optarg);
@@ -530,43 +534,39 @@ int main(int argc, char* argv[]) {
 			output_file_name, memory_amount);
 	params->printParameters();
 
-	/*  Build separated files from GESA file	
-	if(input_format == 1) {
+	// Build separated files from GESA file
+	if((input_format == 1) && (!preprocessed)) {
 		GESAConverter::extractFromGESA(reference_seq_file_name);
 		GESAConverter::extractFromGESA(target_collection_file_name);
 	}
-	*/
 	
-/*
 	CollectionInfo reference_sequence(reference_seq_file_name,
-		0,
-		false,// do not collect symbols/colors frequencies
+		input_format,
+		false,	// do not collect symbols/colors frequencies
 		params->verbose);
-*/		
 
-
-/* Find info from gesa   
-	CollectionInfo collection(params->target_collection_file_name,
-			0,
-			true,
-			params->verbose);
-	if(collection.colors.count(params->reference_color) == 0) {
-		ostringstream err_message;
-		err_message << "Couldn't find reference color in target collection";
-		Error::stopWithError(C_MultiACS_ClassName, __func__, err_message.str());
+	CollectionInfo* collection;
+	if(!preprocessed) {
+		collection = new CollectionInfo(params->target_collection_file_name,
+				input_format,
+				true,
+				params->verbose);
+		if(collection->colors.count(params->reference_color) == 0) {
+			ostringstream err_message;
+			err_message << "Couldn't find reference color in target collection";
+			Error::stopWithError(C_MultiACS_ClassName, __func__, err_message.str());
+		}
+		collection->saveCollectionInfo();
 	}
-	collection.printCollectionInfo();
-*/
+	else {
+		collection = new CollectionInfo(params->target_collection_file_name, input_format, params->verbose);
+	}
+	collection->printCollectionInfo();
 
-//Take info from file if no pre-processing 
-//(in this case, the above lines are not necessary)
-//	CollectionInfo collection(params->target_collection_file_name);
-//	collection.printCollectionInfo();
-
-//Load the length if there exists a file containing the lengths
-CollectionInfo collection;
-collection.loadCollectionLengths(params->target_collection_file_name);
-collection.printCollectionInfo();
+////Load the length if there exists a file containing the lengths
+//CollectionInfo* collection = new CollectionInfo;
+//collection->loadCollectionLengths(params->target_collection_file_name);
+//collection->printCollectionInfo();
 
 	clock_t start = clock();
 	time_t start_wc = time(NULL);
@@ -580,7 +580,7 @@ collection.printCollectionInfo();
 	d_gen.generateD();
 /**/
 
-	MultiACS acs(params, collection);
+	MultiACS acs(params, *collection);
 	acs.computeACS();
 
 	cout << "Global Computation End\n";
