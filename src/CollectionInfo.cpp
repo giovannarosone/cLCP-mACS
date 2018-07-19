@@ -136,7 +136,7 @@ void CollectionInfo::saveCollectionInfo() {
 	FILE* info_file = fopen(info_file_name.c_str(), "w");
 	if(info_file == nullptr) {
 		std::ostringstream err_message;
-		err_message << "Couldn't open file " << info_file;
+		err_message << "Couldn't open file " << info_file_name.str();
 		Error::stopWithError(C_CollectionInfo_ClassName, __func__, err_message.str());
 	}
 
@@ -163,7 +163,7 @@ void CollectionInfo::loadCollectionInfo(std::string file_name) {
 	FILE* info_file = fopen(info_file_name.c_str(), "r");
 	if(info_file == nullptr) {
 		std::ostringstream err_message;
-		err_message << "Couldn't open file " << info_file;
+		err_message << "Couldn't open file " << info_file_name.str();
 		Error::stopWithError(C_CollectionInfo_ClassName, __func__, err_message.str());
 	}
 
@@ -235,7 +235,7 @@ void CollectionInfo::checkForGESAFiles() {
 	FILE* gesa_file = fopen(gesa_file_name.c_str(), "rb");
 	if(gesa_file == nullptr) {
 		std::ostringstream err_message;
-		err_message << "Couldn't open file " << gesa_file;
+		err_message << "Couldn't open file " << gesa_file_name.str();
 		Error::stopWithError(C_CollectionInfo_ClassName, __func__, err_message.str());
 	}
 	if(collect_info) collectSymbolsAndColorsInfo(gesa_file);

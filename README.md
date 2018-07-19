@@ -5,10 +5,7 @@ This software is an implementation of the algorithm described in:
 
 >F. Garofalo, G. Rosone, M. Sciortino and D. Verzotto
 *The colored longest common prefix array computed via sequential scans.*
-Proceedings of String Processing and Information Retrieval - 25th International Symposium, SPIRE 2018, Lecture Notes in Computer Science, Springer [^1]
-
-[^1]:Supported by the project Italian MIUR-SIR CMACBioSeq ("_Combinatorial methods for analysis and compression of biological sequences_")
-grant n.~RBSI146R5L.
+Proceedings of String Processing and Information Retrieval - 25th International Symposium, SPIRE 2018, Lecture Notes in Computer Science, Springer <sup id="a1">[1](#f1)</sup>
 
 **Note that this is only a prototypal version. A production release are yet under development.**
 
@@ -23,7 +20,7 @@ make all
 ### Run
 
 ```sh
-./cLCP-mACS [-h] [-v] [-p] [-f input_format] [-Q amount] ref_seq target_seqs ref_color output
+./cLCP-mACS [-h] [-v] [-p] [-l] [-f input_format] [-Q amount] ref_seq target_seqs ref_color output
 ```
 
 ##### Input
@@ -51,15 +48,20 @@ output       Output/Working files name
 ```
 The option `-f    input_format` specifies the format of the input to cLCP-mACS. For now, only `-f    1` option is admitted (by default) corresponding to the GESA computed by eGSA.
 
-The option `-p` tells if the preprocessing step can be skipped. You should use this option only if the target collection has been already processed in a previous execution (this is indicated by the presence of a `.info` file).
+The option `-p` tells if the preprocessing step can be skipped. You should use this option only if the target collection has been already processed in a previous execution (this is indicated by the presence of a `.info` file, and files `.bwt`,`.lcp`,`.id`).
+
+Option `-l` also skips preprocessing step provided that are available a ` .lenSeqs.aux` file and `.bwt`,`.lcp`,`.id` files (as produced by [BCR tool](https://github.com/giovannarosone/BCR_LCP_GSA)).
 
 The option `-Q amount` dictates the amount of RAM (in Bytes) available to accomodate partial cLCP page. `amount` has to be at least 2 x _m_, where _m_ is the number of sequences in target collection.
 
 #### Contributors
 
 Fabio Garofalo,  University of Palermo
+
 Marinella Sciortino,  University of Palermo
+
 Giovanna Rosone, University of Pisa (project lead)
+
 Davide Verzotto, University of Pisa
 
 #### Citation
@@ -76,3 +78,6 @@ If you use cLCP-mACS in an academic setting you could cite the following paper:
     volume    = {},
     publisher = {Springer}
     }
+---
+1. <small id="f1"> Supported by the project Italian MIUR-SIR CMACBioSeq ("_Combinatorial methods for analysis and compression of biological sequences_")
+grant n.~RBSI146R5L.</small> [↩](#a1)

@@ -450,7 +450,7 @@ void MultiACS::backwardComputation(LetterNumber score_x[]) {
 } /* namespace multi_acs */
 
 void printUsage() {
-	cout << "Usage: [-h] [-v] [-p] [-f input_format] [-Q amount] ref_seq target_seqs ref_color output" << endl;
+	cout << "Usage: [-h] [-v] [-p] [-l] [-f input_format] [-Q amount] ref_seq target_seqs ref_color output" << endl;
 }
 
 using namespace multi_acs;
@@ -459,13 +459,14 @@ int main(int argc, char* argv[]) {
 
 	bool verbose = false;
 	bool preprocessed = false;
+	bool lengths_provided = false;
 	int input_format = 1;
 	string reference_seq_file_name, target_collection_file_name, output_file_name;
 	SequenceNumber reference_color;
 	AllocableMemory memory_amount = BUFFER_SIZE*sizeof(SequenceLength);
 
 	int o;
-	while((o = getopt(argc, argv, "vhpf:Q:")) != -1) {
+	while((o = getopt(argc, argv, "vhplf:Q:")) != -1) {
 		switch(o) {
 			case 'v':
 				verbose = true;
@@ -476,6 +477,9 @@ int main(int argc, char* argv[]) {
 			case 'f':
 				input_format = atoi(optarg);
 				break;
+			case 'l':
+				lengths_provided = true;
+				break;
 			case 'Q':
 				memory_amount = atoi(optarg);
 				break;
@@ -484,6 +488,12 @@ int main(int argc, char* argv[]) {
 				printUsage();
 				exit(EXIT_FAILURE);
 		}
+	}
+
+	if(preprocessed && lengths_provided) {
+		ostringstream err_message;
+		err_message << "Options -p and -l should not be used simultaneously";
+		Error::stopWithError(C_MultiACS_ClassName, __func__, err_message.str());
 	}
 
 	if(optind == argc - 4) {
@@ -535,7 +545,7 @@ int main(int argc, char* argv[]) {
 	params->printParameters();
 
 	// Build separated files from GESA file
-	if((input_format == 1) && (!preprocessed)) {
+	if((input_format == 1) && (!preprocessed) && (!lengths_provided)) {
 		GESAConverter::extractFromGESA(reference_seq_file_name);
 		GESAConverter::extractFromGESA(target_collection_file_name);
 	}
@@ -546,7 +556,7 @@ int main(int argc, char* argv[]) {
 		params->verbose);
 
 	CollectionInfo* collection;
-	if(!preprocessed) {
+	if(!preprocessed && !lengths_provided) {
 		collection = new CollectionInfo(params->target_collection_file_name,
 				input_format,
 				true,
@@ -559,14 +569,16 @@ int main(int argc, char* argv[]) {
 		collection->saveCollectionInfo();
 	}
 	else {
-		collection = new CollectionInfo(params->target_collection_file_name, input_format, params->verbose);
+		if(lengths_provided) {
+			// Load the length if there exists a file containing the lengths
+			collection = new CollectionInfo;
+			collection->loadCollectionLengths(params->target_collection_file_name);
+		}
+		else {
+			collection = new CollectionInfo(params->target_collection_file_name, input_format, params->verbose);
+		}
 	}
 	collection->printCollectionInfo();
-
-////Load the length if there exists a file containing the lengths
-//CollectionInfo* collection = new CollectionInfo;
-//collection->loadCollectionLengths(params->target_collection_file_name);
-//collection->printCollectionInfo();
 
 	clock_t start = clock();
 	time_t start_wc = time(NULL);
