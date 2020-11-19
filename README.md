@@ -64,7 +64,7 @@ Giovanna Rosone, University of Pisa (project lead)
 Davide Verzotto, University of Pisa
 
 #### Citation
-If you use cLCP-mACS in an academic setting you could cite the following paper:
+If you use cLCP-mACS you could cite the following paper:
 
     @inproceedings{GRSV_Spire18,
     author    = {Garofalo, Fabio and Rosone, Giovanna and Sciortino, Marinella and Verzotto, Davide},
