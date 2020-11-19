@@ -7,7 +7,6 @@ This software is an implementation of the algorithm described in:
 *The colored longest common prefix array computed via sequential scans.*
 Proceedings of String Processing and Information Retrieval - 25th International Symposium, SPIRE 2018, Lecture Notes in Computer Science, Springer <sup id="a1">[1](#f1)</sup>
 
-**Note that this is only a prototypal version. A production release are yet under development.**
 
 ### Install
 
